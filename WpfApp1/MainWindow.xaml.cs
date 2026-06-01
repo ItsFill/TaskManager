@@ -117,7 +117,22 @@ public partial class MainWindow : Window
     {
         Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
         dlg.DefaultExt = ".exe";
-        dlg.ShowDialog();
+        dlg.Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*";
+
+        if (dlg.ShowDialog() == true)
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(dlg.FileName){ UseShellExecute = true };
+                Process.Start(startInfo);
+            
+                RefreshProcesses();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not start process: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
     
     public void BtnToggleTimer_Click(object sender, RoutedEventArgs e)
